@@ -7,9 +7,12 @@ namespace Hampom\BariKata;
 use ArrayAccess;
 use BadMethodCallException;
 use Countable;
+use Hampom\BariKata\Attributes\Typed;
 use Hampom\BariKata\Plugins\CollectionPlugin;
+use Hampom\BariKata\TypeConstraint\ShapeTypeConstraint;
 use InvalidArgumentException;
 use IteratorAggregate;
+use ReflectionClass;
 use Traversable;
 
 /**
@@ -97,6 +100,13 @@ final class TypedCollection implements ArrayAccess, IteratorAggregate, Countable
 
     private function isOffType(mixed $value): bool
     {
+        if (str_starts_with($this->type, 'array{')) {
+            static $cache = [];
+            $cache[$this->type] ??= new ShapeTypeConstraint($this->type);
+            $cache[$this->type]->validate($value);
+            return true;
+        }
+
         if ($this->type === 'mixed') {
             return !is_array($value);
         }
