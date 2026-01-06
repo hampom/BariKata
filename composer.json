@@ -36,6 +36,5 @@
   "scripts": {
     "test": "phpunit",
     "format": "mago fmt src tests"
-  },
-  "version": "0.0.2"
+  }
 }
